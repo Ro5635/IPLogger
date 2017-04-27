@@ -2,6 +2,14 @@ from flask import Flask, render_template, request
 from flaskext.mysql import MySQL
 import json
 
+"""
+My DDNS Service with noip.com expired 15 minutes ago. Things are breaking, this is a stop gap solution to be applied to
+ my home servers to log their IP.
+ 
+ Robert Curran 2017
+
+"""
+
 app = Flask(__name__)
 mysql = MySQL()
 
@@ -21,6 +29,20 @@ def main():
     return render_template('index.html')
 
 
+@app.route('/ips')
+def ips():
+    """
+    This outputs all of the Server IPS that are currently stored in the system out to the page
+     
+    """
+    # Connect to the DB and get all of the server connections:
+    cursor.execute("SELECT id, ipaddress, name, lastmodified FROM Servers")
+    all_servers = cursor.fetchall()
+
+    # Pass the DB data over to the template
+    return render_template('servers.html', all_servers=all_servers)
+
+
 @app.route('/update', methods=['POST'])
 def update():
     # Load the received JSON data
@@ -33,9 +55,6 @@ def update():
     if _idNumber:
 
         cursor.execute("UPDATE Servers SET ipaddress = %s WHERE id = %s", (_ip, _idNumber,))
-
-        cursor.execute("SELECT * FROM Servers")
-        data = cursor.fetchone()
 
         conn.commit()
 

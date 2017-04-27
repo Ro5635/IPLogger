@@ -7,6 +7,11 @@
             <p><a class="btn btn-lg btn-success" href="showSignUp" role="button">Sign Up New Server</a>
             </p>
         </div>
+     <ul>
+  {% for server in all_servers %}
+      <li>IP: <a href="http://{{ server[1] }}">{{ server[1] }}</a> Name: {{ server[2] }} Last Updated: {{ server[3] }}</li>
+  {% endfor %}
+  </ul>
 
 
 {%  endblock %}
