@@ -1,17 +1,44 @@
-
 {% extends "layout.html" %}
- {% block body %}
-        <div class="jumbotron">
-            <h1>IP Logger</h1>
-            <p class="lead"></p>
-            <p><a class="btn btn-lg btn-success" href="showSignUp" role="button">Sign Up New Server</a>
-            </p>
+
+{% block body %}
+
+    <div class="jumbotron">
+        <h1>IP Logger</h1>
+        <p class="lead"></p>
+        <p><a class="btn btn-lg btn-success" href="showSignUp" role="button">Sign Up New Server</a>
+        </p>
+    </div>
+
+    <div class="row">
+        <div class="col-2"></div>
+        <div class="col-8">
+
+            <table class="table table-responsive">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>IP</th>
+                    <th>Friendly Name</th>
+                    <th>Last Changed</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                {% for server in all_servers %}
+                    <tr>
+                        <th scope="row">{{ server[0] }}</th>
+                        <td><a href="http://{{ server[1] }}">{{ server[1] }}</a></td>
+                        <td>{{ server[2] }}</td>
+                        <td>{{ server[3] }}</td>
+                    </tr>
+                {% endfor %}
+
+                </tbody>
+            </table>
+
         </div>
-     <ul>
-  {% for server in all_servers %}
-      <li>IP: <a href="http://{{ server[1] }}">{{ server[1] }}</a> Name: {{ server[2] }} Last Updated: {{ server[3] }}</li>
-  {% endfor %}
-  </ul>
 
+        <div class="col-2"></div>
+    </div>{#End Row#}
 
-{%  endblock %}
+{% endblock %}
