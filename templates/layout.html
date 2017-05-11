@@ -40,6 +40,7 @@
 </header>
 
 {#Just add some V space#}
+
 <div class="form-group">
     &nbsp;
 </div>
@@ -49,7 +50,7 @@
     <div class="jumbotron text-center">
         <h1>IP Logger</h1>
         <p class="lead"></p>
-        <p><a class="btn btn-lg btn-success" href="showSignUp" role="button">Sign Up New Server</a>
+        <p><a class="btn btn-lg btn-success" data-toggle="modal" data-target="#signUpModel" role="button">Sign Up New Server</a>
         </p>
     </div>
 
@@ -58,10 +59,21 @@
 
 
     <footer class="footer">
-        <p>Robert Curran 2017</p>
+        <nav class="navbar fixed-bottom">
+            <a href="https://robertcurran.uk">Robert Curran 2017</a>
+        </nav>
     </footer>
 
 </div>
+
+{# Include the sign up model #}
+
+{% include 'signUpModel.html' %}
+
+{% include 'signUpModel.html' %}
+
+
+
 </body>
 
 </html>

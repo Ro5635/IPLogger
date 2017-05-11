@@ -45,6 +45,11 @@ def ips():
 
 @app.route('/update', methods=['POST'])
 def update():
+    """
+    TODO: Add some kind of security/verification
+    
+    :return: 
+    """
     # Load the received JSON data
     content = json.loads(request.get_json())
 
