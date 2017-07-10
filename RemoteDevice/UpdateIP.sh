@@ -1,3 +1,5 @@
+ #!/bin/bash 
+
 # This checks the current IP Address and compares it with the IP address that was used in the
 # last update, if it has changed it calls the API and updates the IP address and saves the 
 # updated value to the file specified IPSaveLocation.
@@ -5,13 +7,13 @@
 # tracked.
 
 # Location to save the last IP
-IPSaveLocation=/tmp/IPTracker/LastIP
+IPSaveLocation=/tmp/IPTracker
 
 # Get the current External IP address
 currentExtIP=$(dig +short myip.opendns.com @resolver1.opendns.com)
 
 # Check to see if this IP is the same as the last submitted IP
-lastSubmittedIP=$(cat $IPSaveLocation)
+lastSubmittedIP=$(cat $IPSaveLocation/LastIP)
 
 echo "The last IP: $lastSubmittedIP"
 
@@ -26,12 +28,16 @@ if [ "$lastSubmittedIP" == "$currentExtIP" ]; then
 	echo "IP Unchanged"
 else
 	# The IPs are differnt!
+	# get the priv_key and Remote_ID
+	Remote_ID=$(cat $IPSaveLocation/Remote_ID)
+	Priv_Key=$(cat $IPSaveLocation/Priv_Key)
+
 
 	# Call the API
-	# TO DO: ADD THE API CALL!!!
+	curl  -H "Content-Type: application/json" -X POST -d '{"id_number":"'"$Remote_ID"'", "priv_key":"'"$Priv_Key"'"}' -i http://127.0.0.1:5000/update 
 
 	# Update $IPSaveLocation
-	echo "$currentExtIP" > "$IPSaveLocation"
+	echo "$currentExtIP" > "$IPSaveLocation/LastIP"
 
 	echo "IP Updated"
 

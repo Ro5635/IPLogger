@@ -14,7 +14,8 @@ My DDNS Service with noip.com expired 15 minutes ago. Things are breaking, this 
 app = Flask(__name__)
 mysql = MySQL()
 
-# MySQL configurations
+# MySQL configurations; I have been developing with the DB and web server on separate Docker containers, as such details
+# are needed as below. Replace with your mysql servers details.
 app.config['MYSQL_DATABASE_USER'] = 'root'
 app.config['MYSQL_DATABASE_PASSWORD'] = '5635'
 app.config['MYSQL_DATABASE_DB'] = 'ServerLogging'
@@ -80,7 +81,7 @@ def update():
         # Return successful update status
         return json.dumps({'status': 200})
     else:
-        return json.dumps({'status': 400, 'error': 'Required fields were missing'})
+        return json.dumps({'status': 400, 'error': 'Required fields were missing', 'recived': content })
 
 
 @app.route('/newserver', methods=['POST'])
