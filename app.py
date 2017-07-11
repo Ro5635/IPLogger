@@ -72,6 +72,9 @@ def update():
             if cursor.rowcount == 1:
                 # Its safe to Commit Changes as we expect 1 row change
                 conn.commit()
+            elif cursor.rowcount == 0:
+                # The IP was all ready up to date, no changes made. commit.
+                conn.commit()
             else:
                 raise IndexError("Unexpected number of Rows were mutated by DB insertion")
 
@@ -81,7 +84,7 @@ def update():
         # Return successful update status
         return json.dumps({'status': 200})
     else:
-        return json.dumps({'status': 400, 'error': 'Required fields were missing', 'recived': content })
+        return json.dumps({'status': 400, 'error': 'Required fields were missing', 'recived': content})
 
 
 @app.route('/newserver', methods=['POST'])

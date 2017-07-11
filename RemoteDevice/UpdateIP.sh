@@ -8,6 +8,7 @@
 
 # Location to save the last IP
 IPSaveLocation=/tmp/IPTracker
+IPTrackerURL=http://127.0.0.1:5000
 
 # Get the current External IP address
 currentExtIP=$(dig +short myip.opendns.com @resolver1.opendns.com)
@@ -34,11 +35,11 @@ else
 
 
 	# Call the API
-	curl  -H "Content-Type: application/json" -X POST -d '{"id_number":"'"$Remote_ID"'", "priv_key":"'"$Priv_Key"'"}' -i http://127.0.0.1:5000/update 
+	curl  -H "Content-Type: application/json" -X POST -d '{"id_number":"'"$Remote_ID"'", "priv_key":"'"$Priv_Key"'"}' -i $IPTrackerURL/update 
 
 	# Update $IPSaveLocation
 	echo "$currentExtIP" > "$IPSaveLocation/LastIP"
 
-	echo "IP Updated"
+	echo " IP Updated"
 
 fi
