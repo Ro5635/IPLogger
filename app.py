@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request
 from flaskext.mysql import MySQL
 import json
+from flask import jsonify
 import random
 
 """
@@ -59,7 +60,16 @@ def update():
     content = (request.get_json())
     # json.loads
     _idNumber = content['id_number']
-    _ip = request.remote_addr
+
+    trusted_proxies = {'127.0.0.1'}  # Local Proxy of apache/Nginx expected
+    route = request.access_route + [request.remote_addr]
+
+    # Get the IP from the forward header, ensure that the proxy is white listed for security.
+    _ip = next((addr for addr in reversed(route)
+                        if addr not in trusted_proxies), request.remote_addr)
+
+    # _ip = request.remote_addr
+
     _priv_key = content['priv_key']
 
     if _idNumber and _priv_key:
@@ -84,7 +94,7 @@ def update():
         # Return successful update status
         return json.dumps({'status': 200})
     else:
-        return json.dumps({'status': 400, 'error': 'Required fields were missing', 'recived': content})
+        return json.dumps({'status': 400, 'error': 'Required fields were missing', 'received': content})
 
 
 @app.route('/newserver', methods=['POST'])
@@ -151,7 +161,9 @@ def newserver():
         print("The Insert into currentAddress Failed, reason: ", error.message)
 
     #  Return the new ID and Private Key
-    return json.dumps({'remote_name': _new_name, 'remote_id': _new_ID, 'new_priv_key': new_priv_key})
+    return_data = json.dumps({'remote_name': _new_name, 'remote_id': _new_ID, 'new_priv_key': str(new_priv_key)})
+
+    return jsonify(return_data)
 
 
 if __name__ == "__main__":
