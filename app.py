@@ -17,14 +17,17 @@ mysql = MySQL()
 
 # MySQL configurations; I have been developing with the DB and web server on separate Docker containers, as such details
 # are needed as below. Replace with your mysql servers details.
-app.config['MYSQL_DATABASE_USER'] = 'root'
-app.config['MYSQL_DATABASE_PASSWORD'] = '5635'
+app.config['MYSQL_DATABASE_USER'] = 'USER'
+app.config['MYSQL_DATABASE_PASSWORD'] = 'PASSWORD'
 app.config['MYSQL_DATABASE_DB'] = 'ServerLogging'
-app.config['MYSQL_DATABASE_HOST'] = '172.17.0.3'
+app.config['MYSQL_DATABASE_HOST'] = '127.0.0.1'
 mysql.init_app(app)
 
 conn = mysql.connect()
 cursor = conn.cursor()
+
+# Allow the creation of new Remotes in the system:
+allow_new_remote_creation = True
 
 
 @app.route("/")
@@ -94,7 +97,7 @@ def update():
         # Return successful update status
         return json.dumps({'status': 200})
     else:
-        return json.dumps({'status': 400, 'error': 'Required fields were missing', 'received': content})
+        return json.dumps({'error_state': True, 'error': 'Required fields were missing', 'received': content, 'error_text': 'There Was An Error'})
 
 
 @app.route('/newserver', methods=['POST'])
@@ -106,11 +109,21 @@ def newserver():
     :return: New Server ID and Private "Key"
     """
 
+    # Ensure that global allow_new_remote_creation is enabled
+    if not allow_new_remote_creation:
+        # Send Error and exit
+        return jsonify(json.dumps({'error_state': True, 'error_text': 'Creation of new remotes is disabled.'}))
+
     # Extract the new remotes name from the request, this need not be unique
     request_content = request.get_json()
     _requesting_IP = request.remote_addr
 
     _new_name = request_content['remote_name']
+
+    # Ensure that the name is present before continuing
+    if len(_new_name) <= 0:
+        # No name was supplied, cannot proceed. Exit.
+        return jsonify(json.dumps({'error_state': True, 'error_text': 'There Was An Error'}))
 
     # Get a new ID
 

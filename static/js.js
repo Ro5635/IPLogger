@@ -34,19 +34,33 @@ $( document ).ready(function() {
 
                 var jsonData = JSON.parse(returnedData);
 
-                //Set the modal title
-                $('#generalModel .generalModalTitle').html('New Remote');
+                //If there is an error show it
+                if("error_state" in jsonData){
 
-                //Place the new structure
-                $('#generalModel .modal-body').html('<p>Generated Details For ' + jsonData['remote_name'] + ' </p><br><div class="form-group row"><label for="idDisplayForm" class="col-sm-2 form-control-label">ID:</label><div class="col-sm-10"><input type="text" class="form-control" id="idDisplayForm" placeholder="loading" readonly></div></div><div class="form-group row"><label for="privKeyDisplayForm" class="col-sm-2 form-control-label">Private Key:</label><div class="col-sm-10"><input type="text" class="form-control" id="privKeyDisplayForm" placeholder="loading" readonly></div></div><br><p>Place the above details into the updater application on the remote.</p>');
+                    //Set the modal title
+                    $('#generalModel .generalModalTitle').html('Error In Remote Creation');
 
-                //Add the new data
-                $('#idDisplayForm').val(jsonData['remote_id']);
-                $('#privKeyDisplayForm').val(jsonData['new_priv_key']);
+                    //Place the new structure
+                    $('#generalModel .modal-body').html(jsonData['error_text']);
 
-                //Clear un-required buttons
-                $('#generalModel .additionalModalButtons').html('');
+                    //Clear un-required buttons
+                    $('#generalModel .additionalModalButtons').html('');
 
+                }else {
+
+                    //Set the modal title
+                    $('#generalModel .generalModalTitle').html('New Remote');
+
+                    //Place the new structure
+                    $('#generalModel .modal-body').html('<p>Generated Details For ' + jsonData['remote_name'] + ' </p><br><div class="form-group row"><label for="idDisplayForm" class="col-sm-2 form-control-label">ID:</label><div class="col-sm-10"><input type="text" class="form-control" id="idDisplayForm" placeholder="loading" readonly></div></div><div class="form-group row"><label for="privKeyDisplayForm" class="col-sm-2 form-control-label">Private Key:</label><div class="col-sm-10"><input type="text" class="form-control" id="privKeyDisplayForm" placeholder="loading" readonly></div></div><br><p>Place the above details into the updater application on the remote.</p>');
+
+                    //Add the new data
+                    $('#idDisplayForm').val(jsonData['remote_id']);
+                    $('#privKeyDisplayForm').val(jsonData['new_priv_key']);
+
+                    //Clear un-required buttons
+                    $('#generalModel .additionalModalButtons').html('');
+                }
 			}
 		});
 
